@@ -19,12 +19,11 @@ public class Employee {
     @GeneratedValue
     private UUID id;
 
+    private String name;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
-
-    @Column
-    private String position;
 
     @Column
     private String department;
