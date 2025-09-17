@@ -1,11 +1,11 @@
 package com.taskflow.api.service;
 
-import com.taskflow.api.domain.employee.Employee;
-import com.taskflow.api.domain.employee.EmployeeCreationRequest;
-import com.taskflow.api.domain.employee.EmployeeCreationResponse;
-import com.taskflow.api.domain.employee.EmployeeDetails;
+import com.taskflow.api.domain.collaborator.Collaborator;
+import com.taskflow.api.domain.collaborator.CollaboratorCreationRequest;
+import com.taskflow.api.domain.collaborator.CollaboratorCreationResponse;
+import com.taskflow.api.domain.collaborator.CollaboratorDetails;
 import com.taskflow.api.domain.user.User;
-import com.taskflow.api.respository.EmployeeRepository;
+import com.taskflow.api.respository.CollaboratorRepository;
 import com.taskflow.api.respository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class CollaboratorService {
 
 
     private final UserRepository userRepository;
-    private final EmployeeRepository employeeRepository;
+    private final CollaboratorRepository collaboratorRepository;
 
 
-    public EmployeeCreationResponse registerEmployee(EmployeeCreationRequest request) {
+    public CollaboratorCreationResponse registerEmployee(CollaboratorCreationRequest request) {
         var userToPersist = User.builder()
                 .username(request.username())
                 .email(request.email())
@@ -35,27 +35,27 @@ public class EmployeeService {
 
         var manager = this.findById(request.managerId());
 
-        var employee = Employee.builder()
+        var employee = Collaborator.builder()
                 .name(request.name())
                 .user(userPersisted)
                 .manager(manager)
                 .department(request.department())
                 .build();
 
-        return new EmployeeCreationResponse(employee,userPersisted);
+        return new CollaboratorCreationResponse(employee,userPersisted);
 
     }
 
-    public Employee findById(UUID id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+    public Collaborator findById(UUID id) {
+        return collaboratorRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Employee not found"));
     }
 
-    public Page<EmployeeDetails> getEmployees(int page, int size) {
+    public Page<CollaboratorDetails> getEmployees(int page, int size) {
         var pageable = PageRequest.of(page, size);
 
-        Page<Employee> employees = employeeRepository.findAll(pageable);
+        Page<Collaborator> employees = collaboratorRepository.findAll(pageable);
 
-        return employees.map(EmployeeDetails::new);
+        return employees.map(CollaboratorDetails::new);
 
     }
 }

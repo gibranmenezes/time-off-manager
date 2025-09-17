@@ -1,4 +1,4 @@
-package com.taskflow.api.domain.employee;
+package com.taskflow.api.domain.collaborator;
 
 import com.taskflow.api.domain.user.User;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Employee {
+public class Collaborator {
 
     @Id
     @GeneratedValue
@@ -30,7 +30,7 @@ public class Employee {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
-    private Employee manager;
+    private Collaborator manager;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

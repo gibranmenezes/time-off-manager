@@ -1,6 +1,6 @@
 package com.taskflow.api.domain.timeoff;
 
-import com.taskflow.api.domain.employee.Employee;
+import com.taskflow.api.domain.collaborator.Collaborator;
 import com.taskflow.api.domain.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class TimeOffRequest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+    private Collaborator collaborator;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;

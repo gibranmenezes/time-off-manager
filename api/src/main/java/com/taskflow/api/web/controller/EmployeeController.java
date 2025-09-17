@@ -1,9 +1,9 @@
 package com.taskflow.api.web.controller;
 
-import com.taskflow.api.domain.employee.EmployeeCreationRequest;
-import com.taskflow.api.domain.employee.EmployeeCreationResponse;
-import com.taskflow.api.domain.employee.EmployeeDetails;
-import com.taskflow.api.service.EmployeeService;
+import com.taskflow.api.domain.collaborator.CollaboratorCreationRequest;
+import com.taskflow.api.domain.collaborator.CollaboratorCreationResponse;
+import com.taskflow.api.domain.collaborator.CollaboratorDetails;
+import com.taskflow.api.service.CollaboratorService;
 import com.taskflow.api.web.reponse.AppResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +16,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
+    private final CollaboratorService collaboratorService;
 
     @PostMapping
-    public ResponseEntity<AppResponse<EmployeeCreationResponse>> registerEmployee(@RequestBody EmployeeCreationRequest request) {
-        var response = employeeService.registerEmployee(request);
+    public ResponseEntity<AppResponse<CollaboratorCreationResponse>> registerEmployee(@RequestBody CollaboratorCreationRequest request) {
+        var response = collaboratorService.registerEmployee(request);
         return AppResponse.created("Employee created successfully", response).getResponseEntity();
 
     }
 
     @GetMapping
-    public ResponseEntity<AppResponse<List<EmployeeDetails>>> getEmployees( @RequestParam(defaultValue = "0") int page,
-                                                                            @RequestParam(defaultValue = "10") int size) {
-        var employees = employeeService.getEmployees(page, size);
+    public ResponseEntity<AppResponse<List<CollaboratorDetails>>> getEmployees(@RequestParam(defaultValue = "0") int page,
+                                                                               @RequestParam(defaultValue = "10") int size) {
+        var employees = collaboratorService.getEmployees(page, size);
 
         return AppResponse.ok("Employees found", employees.getContent())
                 .buildParametersPagination(employees.getNumber(), employees.getSize(), employees.getTotalElements(), employees.getTotalPages())
