@@ -1,6 +1,6 @@
 package com.taskflow.api.domain.enums;
 
-public enum Status {
+public enum RequestStatus {
 
     PENDING,
     APPROVED,
