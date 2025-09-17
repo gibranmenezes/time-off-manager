@@ -32,6 +32,8 @@ public class Collaborator {
     @JoinColumn(name = "manager_id")
     private Collaborator manager;
 
+    private Boolean active;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -40,6 +42,7 @@ public class Collaborator {
 
     @PrePersist
     public void prePersist(){
+        active = true;
         createdAt = Instant.now();
         updatedAt = Instant.now();
     }
@@ -47,5 +50,9 @@ public class Collaborator {
     @PreUpdate
     public void preUpdate(){
         updatedAt = Instant.now();
+    }
+
+    public void inactivate() {
+        this.active = false;
     }
 }
