@@ -1,7 +1,7 @@
 package com.taskflow.api.domain.timeoff;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
-import com.taskflow.api.domain.enums.Status;
+import com.taskflow.api.domain.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +34,7 @@ public class TimeOffRequest {
     private LocalDate endDate;
 
     @Column(nullable = false)
-    private Status status;
+    private RequestStatus requestStatus;
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
