@@ -53,5 +53,10 @@ public class CollaboratorController {
 
     }
 
-    public void deleteCollaborator() {}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<AppResponse<Void>>  deleteCollaborator(@PathVariable UUID id) {
+        collaboratorService.deleteCollaborator(id);
+        return AppResponse.<Void>ok("Collaborator excluded successfully!", null).getResponseEntity();
+
+    }
 }
