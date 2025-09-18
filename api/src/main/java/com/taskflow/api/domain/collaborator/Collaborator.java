@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "employees")
+@Table(name = "collaborators")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +16,8 @@ import java.util.UUID;
 public class Collaborator {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String name;
 
@@ -25,7 +25,6 @@ public class Collaborator {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column
     private String department;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,4 +54,5 @@ public class Collaborator {
     public void inactivate() {
         this.active = false;
     }
+
 }
