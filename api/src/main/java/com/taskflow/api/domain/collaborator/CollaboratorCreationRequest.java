@@ -16,5 +16,5 @@ public record CollaboratorCreationRequest(@NotBlank @NotNull String name,
                                           @Pattern(regexp = "^(?=.{8,}).*$", message = "A senha deve ter pelo menos 8 caracteres")
                                       String password,
                                           @NotBlank @NotNull Role role,
-                                          String department, UUID managerId) {
+                                          String department, Long managerId) {
 }
