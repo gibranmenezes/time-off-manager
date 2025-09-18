@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "time_off_requests")
@@ -20,8 +19,8 @@ import java.util.UUID;
 @Builder
 public class TimeOffRequest {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
@@ -33,8 +32,10 @@ public class TimeOffRequest {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RequestStatus requestStatus;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
