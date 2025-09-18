@@ -1,6 +1,7 @@
 package com.taskflow.api.service;
 
 import com.taskflow.api.domain.collaborator.*;
+import com.taskflow.api.domain.enums.Role;
 import com.taskflow.api.domain.user.User;
 import com.taskflow.api.mapper.CollaboratorMapper;
 import com.taskflow.api.respository.CollaboratorRepository;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -28,54 +27,65 @@ public class CollaboratorService {
                 .username(request.username())
                 .email(request.email())
                 .password(request.password())
+                .role(request.role())
                 .build();
 
         var userPersisted = userRepository.save(userToPersist);
 
-        var manager = collaboratorRepository.findById(request.managerId())
-                .orElseThrow(() -> new EntityNotFoundException("Manager not found"));
+        var manager = getAssociateManager(request);
 
-        var employee = Collaborator.builder()
+        var collaborator = Collaborator.builder()
                 .name(request.name())
                 .user(userPersisted)
-                .manager(manager)
                 .department(request.department())
+                .manager(manager)
                 .build();
 
-        return new CollaboratorCreationResponse(employee,userPersisted);
+        collaboratorRepository.save(collaborator);
+
+        return mapper.toCreationResponse(collaborator);
 
     }
 
-    public CollaboratorDetails getCollaboratorById(UUID id) {
+    public CollaboratorDetails getCollaboratorById(long id) {
         var collaborator =  collaboratorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Collaborator not found"));
 
-        return new CollaboratorDetails(collaborator);
+        return mapper.toDetails(collaborator);
     }
 
     public Page<CollaboratorDetails> getAllCollaborators(int page, int size) {
         var pageable = PageRequest.of(page, size);
 
-        Page<Collaborator> employees = collaboratorRepository.findAll(pageable);
+        Page<Collaborator> collaborators = collaboratorRepository.findAll(pageable);
 
-        return employees.map(CollaboratorDetails::new);
+        return collaborators.map(mapper::toDetails);
 
     }
 
-    public void updateCollaborator(UUID id, CollaboratorUpdateRequest request) {
+    public void updateCollaborator(Long id, CollaboratorUpdateRequest request) {
         var collaborator =  collaboratorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Collaborator not found"));
 
-      mapper.updateCollaboratorFromDto(request, collaborator);
+      mapper.updatedCollaboratorFromDto(request, collaborator);
 
       collaboratorRepository.save(collaborator);
 
     }
 
-    public void deleteCollaborator(UUID id) {
+    public void deleteCollaborator(Long id) {
         var collaborator =  collaboratorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Collaborator not found"));
 
         collaborator.inactivate();
     }
+
+    private Collaborator getAssociateManager(CollaboratorCreationRequest request) {
+        if (!request.role().equals(Role.MANAGER) && !request.role().equals(Role.ADMIN)) {
+            return collaboratorRepository.findById(request.managerId())
+                    .orElseThrow(() -> new EntityNotFoundException("Manager not found"));
+        }
+        return null;
+    }
+
 }
