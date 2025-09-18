@@ -11,10 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/collaborators")
 @RequiredArgsConstructor
 public class CollaboratorController {
 
@@ -38,7 +37,7 @@ public class CollaboratorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppResponse<CollaboratorDetails>> getCollaboratorById(@PathVariable UUID id) {
+    public ResponseEntity<AppResponse<CollaboratorDetails>> getCollaboratorById(@PathVariable Long id) {
         var collaborator = collaboratorService.getCollaboratorById(id);
 
         return AppResponse.ok("Collaborator found!", collaborator).getResponseEntity();
@@ -46,7 +45,7 @@ public class CollaboratorController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AppResponse<Void>> updateEmployee(@PathVariable UUID id, @RequestBody CollaboratorUpdateRequest request) {
+    public ResponseEntity<AppResponse<Void>> updateEmployee(@PathVariable Long id, @RequestBody CollaboratorUpdateRequest request) {
         collaboratorService.updateCollaborator(id, request);
 
         return AppResponse.<Void>ok("Collaborator updated successfully!", null).getResponseEntity();
@@ -54,7 +53,7 @@ public class CollaboratorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AppResponse<Void>>  deleteCollaborator(@PathVariable UUID id) {
+    public ResponseEntity<AppResponse<Void>>  deleteCollaborator(@PathVariable Long id) {
         collaboratorService.deleteCollaborator(id);
         return AppResponse.<Void>ok("Collaborator excluded successfully!", null).getResponseEntity();
 
