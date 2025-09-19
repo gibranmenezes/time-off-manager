@@ -57,4 +57,9 @@ public class Vacation {
     public void setResult(String result) {
         this.vacationStatus = VacationStatus.valueOf(result.toLowerCase());
     }
+
+    public void changeVacationPeriod(LocalDate startDate, LocalDate endDate) {
+        if (startDate != null ) this.startDate = startDate;
+        if (endDate != null) this.endDate = endDate;
+    }
 }
