@@ -17,12 +17,14 @@ public interface CollaboratorMapper {
     @Mapping(target = "user.role", source = "userRole")
     @Mapping(target = "name", source = "name")
     @Mapping(target = "department", source = "department")
-    @Mapping(target = "manager", source = "manager")
+    @Mapping(target = "manager.id", source = "managerId")
     void updatedCollaboratorFromDto(CollaboratorUpdateRequest request, @MappingTarget Collaborator collaborator);
 
     @Mapping(target = "username", source = "user.username")
     CollaboratorCreationResponse toCreationResponse(Collaborator collaborator);
 
     @Mapping(target = "managerName", expression = "java(collaborator.getManager() != null ? collaborator.getManager().getName() : null)")
+    @Mapping(target = "role", source = "user.role")
+    @Mapping(target = "email", source = "user.email")
     CollaboratorDetails toDetails(Collaborator collaborator);
 }
