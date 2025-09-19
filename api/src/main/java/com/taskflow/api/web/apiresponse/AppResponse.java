@@ -1,4 +1,4 @@
-package com.taskflow.api.web.reponse;
+package com.taskflow.api.web.apiresponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
