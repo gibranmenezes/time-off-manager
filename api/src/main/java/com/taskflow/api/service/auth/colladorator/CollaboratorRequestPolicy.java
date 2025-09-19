@@ -3,7 +3,7 @@ package com.taskflow.api.service.auth.colladorator;
 import com.taskflow.api.domain.collaborator.Collaborator;
 import com.taskflow.api.domain.enums.Role;
 import com.taskflow.api.domain.user.User;
-import com.taskflow.api.service.access.AccessScopeService;
+import com.taskflow.api.service.AccessScopeService;
 import com.taskflow.api.service.auth.AuthorizationPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

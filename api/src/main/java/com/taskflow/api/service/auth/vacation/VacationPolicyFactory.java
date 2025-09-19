@@ -37,7 +37,7 @@ public class VacationPolicyFactory {
     
 
     public List<AuthorizationPolicy<Vacation>> getCancelPolicies() {
-        return List.of(adminPolicy, collaboratorPolicy);
+        return List.of(adminPolicy, managerPolicy, collaboratorPolicy);
     }
     
   

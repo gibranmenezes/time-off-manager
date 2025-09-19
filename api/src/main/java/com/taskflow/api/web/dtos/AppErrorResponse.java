@@ -1,4 +1,4 @@
-package com.taskflow.api.web.apiresponse;
+package com.taskflow.api.web.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

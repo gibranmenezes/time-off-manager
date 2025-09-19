@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class CancellationStatusValidation {
+public class CancellationStatusValidation implements  VacationCancellationValidation {
     
+    @Override
     public void validate(Vacation vacation) {
         if (vacation.getVacationStatus() != VacationStatus.PENDING && 
             vacation.getVacationStatus() != VacationStatus.APPROVED) {
