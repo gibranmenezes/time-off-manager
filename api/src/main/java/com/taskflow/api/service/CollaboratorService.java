@@ -1,10 +1,9 @@
-package com.taskflow.api.service.collaborator;
+package com.taskflow.api.service;
 
 import com.taskflow.api.domain.collaborator.*;
 import com.taskflow.api.domain.enums.Role;
 import com.taskflow.api.mapper.CollaboratorMapper;
 import com.taskflow.api.respository.CollaboratorRepository;
-import com.taskflow.api.service.user.UserService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

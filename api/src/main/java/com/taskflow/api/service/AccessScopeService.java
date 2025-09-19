@@ -1,4 +1,4 @@
-package com.taskflow.api.service.access;
+package com.taskflow.api.service;
 
 import com.taskflow.api.domain.enums.Role;
 import com.taskflow.api.domain.user.User;
