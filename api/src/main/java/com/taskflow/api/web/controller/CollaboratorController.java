@@ -4,8 +4,9 @@ import com.taskflow.api.domain.collaborator.CollaboratorCreationRequest;
 import com.taskflow.api.domain.collaborator.CollaboratorCreationResponse;
 import com.taskflow.api.domain.collaborator.CollaboratorDetails;
 import com.taskflow.api.domain.collaborator.CollaboratorUpdateRequest;
-import com.taskflow.api.service.CollaboratorService;
-import com.taskflow.api.web.reponse.AppResponse;
+import com.taskflow.api.service.collaborator.CollaboratorService;
+import com.taskflow.api.web.apiresponse.AppResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class CollaboratorController {
     private final CollaboratorService collaboratorService;
 
     @PostMapping
-    public ResponseEntity<AppResponse<CollaboratorCreationResponse>> register(@RequestBody CollaboratorCreationRequest request) {
+    public ResponseEntity<AppResponse<CollaboratorCreationResponse>> register(@RequestBody @Valid CollaboratorCreationRequest request) {
         var response = collaboratorService.createCollaborator(request);
         return AppResponse.created("User registered successfully", response).getResponseEntity();
 
