@@ -19,7 +19,7 @@ import java.time.Instant;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -41,14 +41,22 @@ public class User {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(nullable = false)
+    private Boolean active;
+
     @PrePersist
     public void prePersist() {
         createdAt = Instant.now();
         updatedAt = Instant.now();
+        active = true;
     }
 
     @PreUpdate
     public void preUpdate() {
         updatedAt = Instant.now();
+    }
+
+    public void inactivate() {
+        this.active = false;
     }
 }
