@@ -21,6 +21,7 @@ public interface CollaboratorMapper {
     void updatedCollaboratorFromDto(CollaboratorUpdateRequest request, @MappingTarget Collaborator collaborator);
 
     @Mapping(target = "username", source = "user.username")
+    @Mapping(target = "managerId", source = "manager.id")
     CollaboratorCreationResponse toCreationResponse(Collaborator collaborator);
 
     @Mapping(target = "managerName", expression = "java(collaborator.getManager() != null ? collaborator.getManager().getName() : null)")

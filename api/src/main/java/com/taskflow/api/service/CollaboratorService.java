@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneOffset;
+
 @Service
 @RequiredArgsConstructor
 public class CollaboratorService {
@@ -46,10 +48,21 @@ public class CollaboratorService {
         return mapper.toDetails(collaborator);
     }
 
-    public Page<CollaboratorDetails> getAllCollaborators(int page, int size) {
+    public Page<CollaboratorDetails> getAllCollaborators(CollaboratorFilter filter, int page, int size) {
         var pageable = PageRequest.of(page, size);
 
-        Page<Collaborator> collaborators = collaboratorRepository.findAll(pageable);
+        Page<Collaborator> collaborators = collaboratorRepository.findAllWithFilters(
+                filter.name(),
+                filter.username(),
+                filter.email(),
+                filter.department(),
+                filter.managerId(),
+                filter.createdAtStart() != null ? filter.createdAtStart().atStartOfDay(ZoneOffset.UTC).toInstant() : null,
+                filter.createdAtEnd() != null ? filter.createdAtEnd().atTime(23, 59, 59).atZone(ZoneOffset.UTC).toInstant() : null,
+                filter.userRole().name(),
+                filter.active(),
+                pageable
+        );
 
         return collaborators.map(mapper::toDetails);
 
@@ -60,9 +73,11 @@ public class CollaboratorService {
         var collaborator =  collaboratorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Collaborator not found"));
 
-      mapper.updatedCollaboratorFromDto(request, collaborator);
+        var user = userService.updateUser(collaborator.getUser().getId(), request.username(), request.userEmail(), request.userPassword(), request.userRole());
+        collaborator.setUser(user);
+        mapper.updatedCollaboratorFromDto(request, collaborator);
 
-      collaboratorRepository.save(collaborator);
+        collaboratorRepository.save(collaborator);
 
     }
 
