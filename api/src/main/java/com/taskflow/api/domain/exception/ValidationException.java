@@ -1,6 +1,7 @@
 package com.taskflow.api.domain.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class ValidationException extends RuntimeException {
@@ -12,10 +13,5 @@ public class ValidationException extends RuntimeException {
         this.errorType = errorType;
     }
 
-    public enum ValidationErrorType {
-        INVALID_INPUT,
-        RESOURCE_NOT_FOUND,
-        PERMISSION_DENIED,
-        BUSINESS_RULE_VIOLATION,
-    }
+
 }

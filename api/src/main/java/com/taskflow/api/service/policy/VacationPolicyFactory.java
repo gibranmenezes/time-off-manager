@@ -1,13 +1,7 @@
-package com.taskflow.api.service.auth.vacation;
+package com.taskflow.api.service.policy;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
 import com.taskflow.api.domain.vacation.Vacation;
-import com.taskflow.api.service.auth.AuthorizationPolicy;
-import com.taskflow.api.service.auth.admin.AdminVacationPolicy;
-import com.taskflow.api.service.auth.colladorator.CollaboratorRequestPolicy;
-import com.taskflow.api.service.auth.colladorator.CollaboratorVacationPolicy;
-import com.taskflow.api.service.auth.manager.ManagerApprovalPolicy;
-import com.taskflow.api.service.auth.manager.ManagerVacationPolicy;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.taskflow.api.service.auth;
+package com.taskflow.api.service.policy;
 
 import com.taskflow.api.domain.user.User;
 

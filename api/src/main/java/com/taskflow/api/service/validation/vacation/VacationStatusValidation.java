@@ -1,6 +1,7 @@
-package com.taskflow.api.service.validation.vacation.response;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.enums.VacationStatus;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import com.taskflow.api.domain.vacation.Vacation;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class VacationStatusValidation implements VacationResponseValidation {
         if (vacation.getVacationStatus() != VacationStatus.PENDING) {
             throw new ValidationException(
                 "Only vacation requests with PENDING status can be approved or rejected",
-                ValidationException.ValidationErrorType.BUSINESS_RULE_VIOLATION
+                ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
     }

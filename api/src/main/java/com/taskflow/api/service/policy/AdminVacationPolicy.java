@@ -1,9 +1,8 @@
-package com.taskflow.api.service.auth.admin;
+package com.taskflow.api.service.policy;
 
 import com.taskflow.api.domain.enums.Role;
 import com.taskflow.api.domain.user.User;
 import com.taskflow.api.domain.vacation.Vacation;
-import com.taskflow.api.service.auth.AuthorizationPolicy;
 import org.springframework.stereotype.Component;
 
 /**

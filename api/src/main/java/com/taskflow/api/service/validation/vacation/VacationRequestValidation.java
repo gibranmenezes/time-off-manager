@@ -1,4 +1,4 @@
-package com.taskflow.api.service.validation.vacation.request;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
 

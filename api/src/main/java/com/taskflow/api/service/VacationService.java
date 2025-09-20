@@ -8,12 +8,12 @@ import com.taskflow.api.domain.vacation.VacationResponse;
 import com.taskflow.api.mapper.VacationMapper;
 import com.taskflow.api.respository.CollaboratorRepository;
 import com.taskflow.api.respository.VacationRepository;
-import com.taskflow.api.service.auth.vacation.VacationPolicyFactory;
-import com.taskflow.api.service.validation.vacation.cancel.VacationCancellationValidation;
-import com.taskflow.api.service.validation.vacation.request.VacationRequestValidation;
-import com.taskflow.api.service.validation.vacation.response.VacationResponseValidation;
+import com.taskflow.api.service.policy.VacationPolicyFactory;
+import com.taskflow.api.service.validation.vacation.VacationCancellationValidation;
+import com.taskflow.api.service.validation.vacation.VacationRequestValidation;
+import com.taskflow.api.service.validation.vacation.VacationResponseValidation;
 
-import com.taskflow.api.service.validation.vacation.update.PendingStatusValidation;
+import com.taskflow.api.service.validation.vacation.PendingStatusValidation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

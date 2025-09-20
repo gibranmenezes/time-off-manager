@@ -1,6 +1,7 @@
-package com.taskflow.api.service.validation.vacation.request;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import com.taskflow.api.respository.VacationRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class OverlappingVacationValidation implements VacationRequestValidation 
         if (vacationRepository.existsOverlappingRequests(startDate, endDate)) {
             throw new ValidationException(
                 "There is already an approved vacation in this period",
-                ValidationException.ValidationErrorType.BUSINESS_RULE_VIOLATION
+                ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
     }

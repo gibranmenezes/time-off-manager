@@ -1,6 +1,7 @@
-package com.taskflow.api.service.validation.vacation.request;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class VacationDurationValidation implements VacationRequestValidation {
         if (days > MAX_VACATION_DAYS) {
             throw new ValidationException(
                 String.format("Vacation duration exxceeds the maximum limit of %d days", MAX_VACATION_DAYS),
-                ValidationException.ValidationErrorType.BUSINESS_RULE_VIOLATION
+                ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
     }

@@ -1,6 +1,7 @@
-package com.taskflow.api.service.validation.vacation.cancel;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.enums.VacationStatus;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import com.taskflow.api.domain.vacation.Vacation;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ public class CancellationStatusValidation implements  VacationCancellationValida
             vacation.getVacationStatus() != VacationStatus.APPROVED) {
             throw new ValidationException(
                 "Only pending or approved vacation requests can be cancelled",
-                ValidationException.ValidationErrorType.BUSINESS_RULE_VIOLATION
+                ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
     }

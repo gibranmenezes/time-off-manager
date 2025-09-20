@@ -1,6 +1,7 @@
-package com.taskflow.api.service.validation.vacation.request;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class FutureDateValidation implements VacationRequestValidation {
         if (startDate.isBefore(today) || endDate.isBefore(today)) {
             throw new ValidationException(
                 "Vacation dates must be in the future",
-                ValidationException.ValidationErrorType.BUSINESS_RULE_VIOLATION
+                ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
     }

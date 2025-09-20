@@ -1,4 +1,4 @@
-package com.taskflow.api.service.validation.vacation.cancel;
+package com.taskflow.api.service.validation.vacation;
 
 import com.taskflow.api.domain.vacation.Vacation;
 
