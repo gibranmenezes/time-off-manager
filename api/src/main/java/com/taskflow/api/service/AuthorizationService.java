@@ -1,9 +1,16 @@
 package com.taskflow.api.service;
 
+import com.taskflow.api.config.JwtTokenProvider;
+import com.taskflow.api.domain.exception.ValidationErrorType;
 import com.taskflow.api.domain.exception.ValidationException;
 import com.taskflow.api.domain.user.User;
-import com.taskflow.api.service.auth.AuthorizationPolicy;
+import com.taskflow.api.service.policy.AuthorizationPolicy;
+import com.taskflow.api.web.dtos.LoginRequest;
+import com.taskflow.api.web.dtos.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorizationService {
 
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
+
+    public TokenResponse login(LoginRequest request) {
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(request.username(), request.password());
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
+        String token = tokenProvider.generateToken((User) auth.getPrincipal());
+        return new TokenResponse(token);
+    }
+
     public <T> void checkAccess(User user, T resource, List<AuthorizationPolicy<T>> policies, String errorMessage) {
         boolean hasAccess = policies.stream()
                 .anyMatch(policy -> policy.hasAccess(user, resource));
@@ -20,7 +37,7 @@ public class AuthorizationService {
         if (!hasAccess) {
             throw new ValidationException(
                     errorMessage,
-                    ValidationException.ValidationErrorType.PERMISSION_DENIED
+                    ValidationErrorType.PERMISSION_DENIED
             );
         }
     }
