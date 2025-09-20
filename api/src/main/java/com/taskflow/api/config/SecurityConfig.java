@@ -16,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Component
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -27,13 +29,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/collaborators").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/collaborators").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/collaborators").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/collaborators").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/collaborators").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // Collaborator endpoints
+                        .requestMatchers(HttpMethod.POST, "/collaborators").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/collaborators/**").hasAnyAuthority("ADMIN", "MANAGER", "COLLABORATOR")
+                        .requestMatchers(HttpMethod.PATCH, "/collaborators/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/collaborators/**").hasAuthority("ADMIN")
+                        // Vacation endpoints
+                        .requestMatchers(HttpMethod.POST, "/vacations").hasAnyAuthority("ADMIN", "MANAGER", "COLLABORATOR")
+                        .requestMatchers(HttpMethod.PUT, "/vacations/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/vacations/**").hasAnyAuthority("ADMIN", "MANAGER", "COLLABORATOR")
+                        .requestMatchers(HttpMethod.PATCH, "/vacations/**").hasAnyAuthority("ADMIN", "MANAGER", "COLLABORATOR")
+                        .requestMatchers(HttpMethod.GET, "/vacations/**").hasAnyAuthority("ADMIN", "MANAGER", "COLLABORATOR")
+                        //swagger
+                        .requestMatchers("/v3/api-docs/**","/swagger-ui.html", "swagger-ui/**").permitAll()
+
                         .anyRequest()
                         .authenticated()
                 ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
