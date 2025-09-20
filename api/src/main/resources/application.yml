@@ -17,8 +17,20 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration,filesystem:./flyway/sql
+    baseline-on-migrate: true
+    baseline-version: 0
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:123456}
 
 server:
   port: 8080
-  servlet:
-    context-path: /api
+
+
+
+    #admin: admin1234
+    #manager1: manager1234
+    #manager2: manager1234
+    #collab1 até collab7: collab1234
