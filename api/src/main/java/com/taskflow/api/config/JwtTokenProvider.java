@@ -15,14 +15,14 @@ import java.time.ZoneOffset;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${api:security:token:secret}")
+    @Value("${api.security.token.secret}")
     private String secret;
 
     public String generateToken(User user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
-                    .withIssuer("enrolment-system")
+                    .withIssuer("time-off-manager-api")
                     .withSubject(user.getUsername())
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
@@ -35,7 +35,7 @@ public class JwtTokenProvider {
         try {
             var algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("enrolment-system")
+                    .withIssuer("time-off-manager-api")
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
