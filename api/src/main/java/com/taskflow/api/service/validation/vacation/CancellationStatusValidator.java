@@ -6,14 +6,16 @@ import com.taskflow.api.domain.exception.ValidationException;
 import com.taskflow.api.domain.vacation.Vacation;
 import org.springframework.stereotype.Component;
 
-@Component
-public class VacationStatusValidation implements VacationResponseValidation {
 
+@Component
+public class CancellationStatusValidator implements  VacationCancellationValidation {
+    
     @Override
     public void validate(Vacation vacation) {
-        if (vacation.getVacationStatus() != VacationStatus.PENDING) {
+        if (vacation.getVacationStatus() != VacationStatus.PENDING && 
+            vacation.getVacationStatus() != VacationStatus.APPROVED) {
             throw new ValidationException(
-                "Only vacation requests with PENDING status can be approved or rejected",
+                "Only pending or approved vacation requests can be cancelled",
                 ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }

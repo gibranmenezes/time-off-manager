@@ -6,17 +6,20 @@ import com.taskflow.api.domain.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Component
-public class FutureDateValidation implements VacationRequestValidation {
+public class VacationDurationValidator implements VacationRequestValidation {
+
+    private static final int MAX_VACATION_DAYS = 30;
 
     @Override
     public void validate(Collaborator collaborator, LocalDate startDate, LocalDate endDate) {
-        LocalDate today = LocalDate.now();
+        long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         
-        if (startDate.isBefore(today) || endDate.isBefore(today)) {
+        if (days > MAX_VACATION_DAYS) {
             throw new ValidationException(
-                "Vacation dates must be in the future",
+                String.format("Vacation duration exxceeds the maximum limit of %d days", MAX_VACATION_DAYS),
                 ValidationErrorType.BUSINESS_RULE_VIOLATION
             );
         }
