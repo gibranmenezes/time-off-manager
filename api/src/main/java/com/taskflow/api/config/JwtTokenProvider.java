@@ -24,6 +24,7 @@ public class JwtTokenProvider {
             return JWT.create()
                     .withIssuer("time-off-manager-api")
                     .withSubject(user.getUsername())
+                    .withClaim("role", user.getRole().name())
                     .withExpiresAt(expirationDate())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
