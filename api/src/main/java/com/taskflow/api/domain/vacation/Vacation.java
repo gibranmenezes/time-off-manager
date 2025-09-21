@@ -23,7 +23,7 @@ public class Vacation {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinColumn(name = "collaborator_id", nullable = false)
     private Collaborator collaborator;
 
     @Column(name = "start_date", nullable = false)
@@ -54,12 +54,16 @@ public class Vacation {
         updatedAt = Instant.now();
     }
 
-    public void setResult(String result) {
-        this.vacationStatus = VacationStatus.valueOf(result.toLowerCase());
+    public void setResult(VacationStatus result) {
+        this.vacationStatus = result;
     }
 
     public void changeVacationPeriod(LocalDate startDate, LocalDate endDate) {
         if (startDate != null ) this.startDate = startDate;
         if (endDate != null) this.endDate = endDate;
+    }
+
+    public void cancelVacation() {
+        this.vacationStatus = VacationStatus.CANCELLED;
     }
 }
