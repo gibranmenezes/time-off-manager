@@ -10,11 +10,8 @@ import com.taskflow.api.mapper.VacationMapper;
 import com.taskflow.api.respository.CollaboratorRepository;
 import com.taskflow.api.respository.VacationRepository;
 import com.taskflow.api.service.policy.VacationPolicyFactory;
-import com.taskflow.api.service.validation.vacation.VacationCancellationValidation;
-import com.taskflow.api.service.validation.vacation.VacationRequestValidation;
-import com.taskflow.api.service.validation.vacation.VacationResponseValidation;
+import com.taskflow.api.service.validation.vacation.*;
 
-import com.taskflow.api.service.validation.vacation.PendingStatusValidation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +30,11 @@ public class VacationService {
     private final CollaboratorRepository collaboratorRepository;
     private final AccessScopeService accessScopeService;
 
-    private final List<VacationRequestValidation> requestValidations;
-    private final List<VacationResponseValidation> responseValidations;
-    private final List<VacationCancellationValidation> cancelValidations;
+    private final List<VacationRequestValidation> requestValidators;
+    private final List<VacationResponseValidation> responseValidators;
+    private final List<VacationCancellationValidation> cancelValidators;
+    private final List<VacationUpdateValidation> updateValidations;
 
-    private final PendingStatusValidation pendingStatusValidation;
 
     private final AuthorizationService authorizationService;
     private final VacationPolicyFactory policyFactory;
@@ -54,7 +51,7 @@ public class VacationService {
                 "You don't have permission to request vacation for this collaborator"
         );
 
-        requestValidations.forEach(v -> v.validate(collaborator, request.startDate(), request.endDate()));
+        requestValidators.forEach(v -> v.validate(collaborator, request.startDate(), request.endDate()));
 
         var vacation = Vacation.builder()
                 .collaborator(collaborator)
@@ -79,7 +76,7 @@ public class VacationService {
                 "You don't have permission to approve or reject this vacation request"
         );
         
-        responseValidations.forEach(v -> v.validate(vacationRequest));
+        responseValidators.forEach(v -> v.validate(vacationRequest));
         
         vacationRequest.setResult(response);
         vacationRepository.save(vacationRequest);
@@ -90,7 +87,7 @@ public class VacationService {
         var vacation = vacationRepository.findById(vacationId)
                 .orElseThrow(() -> new EntityNotFoundException("Vacation not found"));
 
-        cancelValidations.forEach(v -> v.validate(vacation));
+        cancelValidators.forEach(v -> v.validate(vacation));
 
         authorizationService.checkAccess(
                 currentUser,
@@ -118,11 +115,11 @@ public class VacationService {
                 "You don't have permission to update this vacation request"
         );
 
-        pendingStatusValidation.validate(vacation);
-        requestValidations.forEach(v -> v.validate(vacation.getCollaborator(), startDate, endDate));
+        updateValidations.forEach(v -> v.validateUpdate(vacation));
 
         vacation.changeVacationPeriod(startDate, endDate);
-       vacationRepository.save(vacation);
+        vacation.setResult(VacationStatus.PENDING);
+        vacationRepository.save(vacation);
     }
 
     public Page<VacationResponse> listVacations(User currentUser, VacationFilter filter,
