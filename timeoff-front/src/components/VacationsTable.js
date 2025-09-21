@@ -85,21 +85,21 @@ const VacationsTable = ({ vacations, onDetails, onEdit, onRespond, onCancel, ope
                 </td>
                 <td>
                   <div className="d-flex gap-2">
-                    <button className="btn btn-sm btn-outline-info" onClick={() => onDetails(vacation)} title="Details">
+                    <button className="btn btn-sm btn-outline-info" onClick={() => onDetails(vacation)} title="View details">
                       <FaEye />
                     </button>
                     {isVacationPending(vacation) && isManagerOrAdmin && (
-                      <button className="btn btn-sm btn-outline-success" onClick={() => onRespond(vacation)} title="Respond">
+                      <button className="btn btn-sm btn-outline-success" onClick={() => onRespond(vacation)} title="Approve vacation">
                         <FaCheck />
                       </button>
                     )}
                     {(!isCancelled(vacation) && (isManagerOrAdmin || (isVacationPending(vacation) && isOwnVacation(vacation)))) && (
-                      <button className="btn btn-sm btn-outline-warning" onClick={() => onEdit(vacation)} title="Edit">
+                      <button className="btn btn-sm btn-outline-warning" onClick={() => onEdit(vacation)} title="Edit vacation">
                         <FaEdit />
                       </button>
                     )}
                     {(isManagerOrAdmin || isOwnVacation(vacation)) && vacation.status !== 'CANCELLED' && (
-                      <button className="btn btn-sm btn-outline-danger" onClick={() => onCancel(vacation.id)} title="Cancel">
+                      <button className="btn btn-sm btn-outline-danger" onClick={() => onCancel(vacation.id)} title="Cancel vacation">
                         <FaCalendarTimes />
                       </button>
                     )}

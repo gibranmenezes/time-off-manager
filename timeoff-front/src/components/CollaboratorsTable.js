@@ -86,20 +86,20 @@ const CollaboratorsTable = ({ collaborators, onDetails, onEdit, onDelete, onRequ
                 </td>
                 <td>
                   <div className="d-flex gap-2">
-                    <button className="btn btn-sm btn-outline-info" onClick={() => onDetails(collaborator.id)}>
+                    <button className="btn btn-sm btn-outline-info" onClick={() => onDetails(collaborator.id)} title="View details">
                       <FaEye />
                     </button>
                     {canModify && (
                       <>
-                        <button className="btn btn-sm btn-outline-warning" onClick={() => onEdit(collaborator.id)}>
+                        <button className="btn btn-sm btn-outline-warning" onClick={() => onEdit(collaborator.id)} title="Edit collaborator">
                           <FaEdit />
                         </button>
-                        <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(collaborator.id)}>
+                        <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(collaborator.id)} title="Delete collaborator">
                           <FaUserSlash />
                         </button>
                       </>
                     )}
-                    <button className="btn btn-sm btn-outline-success" onClick={() => onRequestVacation(collaborator.id)}>
+                    <button className="btn btn-sm btn-outline-success" onClick={() => onRequestVacation(collaborator.id)} title="Request vacation">
                       <FaCalendarPlus />
                     </button>
                   </div>

@@ -11,6 +11,8 @@ const Layout = ({ children }) => {
   const userRole = decodedToken ? decodedToken.role : null;
   const canViewCollaborators = userRole === 'ADMIN' || userRole === 'MANAGER';
 
+  console.log("User Role in Layout.js:", userRole); // Linha para debug
+
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     navigate('/');
@@ -35,15 +37,15 @@ const Layout = ({ children }) => {
         <div className="flex-grow-1">
           <nav className="nav flex-column">
             {canViewCollaborators && (
-              <Link to="/vacations" className="nav-link text-white d-flex align-items-center">
-              <FaCalendarAlt className="me-2" />
-              Vacations
-            </Link>
-            )}
-            <Link to="/collaborators" className="nav-link text-white d-flex align-items-center mb-2">
+              <Link to="/collaborators" className="nav-link text-white d-flex align-items-center mb-2">
                 <FaUserFriends className="me-2" />
                 Collaborators
               </Link>
+            )}
+            <Link to="/vacations" className="nav-link text-white d-flex align-items-center">
+              <FaCalendarAlt className="me-2" />
+              Vacations
+            </Link>
           </nav>
         </div>
       </aside>
