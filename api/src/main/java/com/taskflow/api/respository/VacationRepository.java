@@ -19,7 +19,7 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
        FROM Vacation v
        WHERE (v.startDate <= :endDate AND v.endDate >= :startDate)\s
        AND (
-refac           (v.vacationStatus = 'APPROVED' AND (:managerId is null or v.collaborator.manager.id = :managerId))
+           (v.vacationStatus = 'APPROVED' AND (:managerId is null or v.collaborator.manager.id = :managerId))
            OR\s
            (v.vacationStatus = 'PENDING' AND v.collaborator.id = :collaboratorId)
        )
