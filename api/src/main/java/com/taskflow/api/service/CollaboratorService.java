@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneOffset;
@@ -47,14 +46,13 @@ public class CollaboratorService {
     public Page<CollaboratorDetails> getCollaborators(CollaboratorFilter filter, User currentUser, int page, int size) {
         var pageable = PageRequest.of(page, size);
 
-        if (currentUser.getRole() == Role.COLLABORATOR) {
-            throw new AccessDeniedException("You do not have permission to list collaborators.");
-        }
 
         var accessScope = accessScopeService.resolve(currentUser);
 
+        var collaboratorId = currentUser.getRole() == Role.COLLABORATOR ? accessScope.collaboratorId() : filter.collaboratorId();
+
         Page<Collaborator> collaborators = collaboratorRepository.findAllWithFilters(
-                filter.collaboratorId(),
+                collaboratorId,
                 filter.name(),
                 filter.username(),
                 filter.email(),
