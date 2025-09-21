@@ -15,14 +15,18 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
 
 
     @Query("""
-        SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END
-        FROM Vacation r
-        WHERE r.vacationStatus = 'APPROVED'
-          AND (:startDate BETWEEN r.startDate AND r.endDate
-            OR :endDate BETWEEN r.startDate AND r.endDate
-            OR r.startDate BETWEEN :startDate AND :endDate)
+        SELECT CASE WHEN COUNT(v) > 0 THEN true ELSE false END\s
+       FROM Vacation v
+       WHERE (v.startDate <= :endDate AND v.endDate >= :startDate)\s
+       AND (
+           (v.vacationStatus = 'APPROVED' AND v.collaborator.manager.id = :managerId)\s
+           OR\s
+           (v.vacationStatus = 'PENDING' AND v.collaborator.id = :collaboratorId)
+       )
     """)
     boolean existsOverlappingRequests(
+            @Param("managerId") Long managerId,
+            @Param("collaboratorId") Long collaboratorId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
