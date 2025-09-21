@@ -1,8 +1,10 @@
 package com.taskflow.api.web.controller;
 
 import com.taskflow.api.domain.collaborator.*;
+import com.taskflow.api.domain.user.User;
 import com.taskflow.api.service.CollaboratorService;
 import com.taskflow.api.web.dtos.AppResponse;
+import com.taskflow.api.web.security.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,7 +39,7 @@ public class CollaboratorController {
                             schema = @Schema(implementation = AppResponse.class)))
     })
     @PostMapping
-    public ResponseEntity<AppResponse<CollaboratorCreationResponse>> register(@RequestBody @Valid CollaboratorCreationRequest request) {
+    public ResponseEntity<AppResponse<CollaboratorDetails>> register(@RequestBody @Valid CollaboratorCreationRequest request) {
         var response = collaboratorService.createCollaborator(request);
         return AppResponse.created("User registered successfully", response).getResponseEntity();
 
@@ -54,30 +56,14 @@ public class CollaboratorController {
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class)))
     })
     @GetMapping
-    public ResponseEntity<AppResponse<List<CollaboratorDetails>>> getCollaborators(@ModelAttribute CollaboratorFilter filter, @RequestParam(defaultValue = "0") int page,
-                                                                                   @RequestParam(defaultValue = "10") int size) {
-        var collaborators = collaboratorService.getAllCollaborators(filter,page, size);
+    public ResponseEntity<AppResponse<List<CollaboratorDetails>>> getCollaborators(@ModelAttribute CollaboratorFilter filter,
+                                                                                   @RequestParam(defaultValue = "0") int page,
+                                                                                   @RequestParam(defaultValue = "20") int size,
+                                                                                   @CurrentUser User currentUser) {
+        var collaborators = collaboratorService.getCollaborators(filter, currentUser,page, size);
         return AppResponse.ok("Employees found", collaborators.getContent())
                 .buildParametersPagination(collaborators.getNumber(), collaborators.getSize(), collaborators.getTotalElements(), collaborators.getTotalPages())
                 .getResponseEntity();
-    }
-
-    @Operation(
-        summary = "Get collaborator by ID",
-        description = "Returns details of a collaborator by their ID."
-    )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Collaborator found",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Collaborator not found",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AppResponse.class)))
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<AppResponse<CollaboratorDetails>> getCollaboratorById(@PathVariable Long id) {
-        var collaborator = collaboratorService.getCollaboratorById(id);
-        return AppResponse.ok("Collaborator found!", collaborator).getResponseEntity();
     }
 
     @Operation(
