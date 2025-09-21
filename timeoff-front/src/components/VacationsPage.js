@@ -115,7 +115,7 @@ const VacationsPage = () => {
         setSearchTrigger(prev => prev + 1);
       }
     } catch (err) {
-      setError(`Failed to cancel vacation: ${err.message}`);
+      setError(err.message);
     }
   };
 

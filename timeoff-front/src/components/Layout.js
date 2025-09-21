@@ -1,9 +1,15 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserFriends, FaCalendarAlt, FaSignOutAlt } from 'react-icons/fa';
+import { jwtDecode } from 'jwt-decode';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
+
+  const token = localStorage.getItem('authToken');
+  const decodedToken = token ? jwtDecode(token) : null;
+  const userRole = decodedToken ? decodedToken.role : null;
+  const canViewCollaborators = userRole === 'ADMIN' || userRole === 'MANAGER';
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -28,14 +34,16 @@ const Layout = ({ children }) => {
         </div>
         <div className="flex-grow-1">
           <nav className="nav flex-column">
-            <Link to="/collaborators" className="nav-link text-white d-flex align-items-center mb-2">
-              <FaUserFriends className="me-2" />
-              Collaborators
-            </Link>
-            <Link to="/vacations" className="nav-link text-white d-flex align-items-center">
+            {canViewCollaborators && (
+              <Link to="/vacations" className="nav-link text-white d-flex align-items-center">
               <FaCalendarAlt className="me-2" />
               Vacations
             </Link>
+            )}
+            <Link to="/collaborators" className="nav-link text-white d-flex align-items-center mb-2">
+                <FaUserFriends className="me-2" />
+                Collaborators
+              </Link>
           </nav>
         </div>
       </aside>

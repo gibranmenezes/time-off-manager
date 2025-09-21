@@ -98,7 +98,7 @@ const VacationsTable = ({ vacations, onDetails, onEdit, onRespond, onCancel, ope
                         <FaEdit />
                       </button>
                     )}
-                    {(isManagerOrAdmin || isOwnVacation(vacation)) && (
+                    {(isManagerOrAdmin || isOwnVacation(vacation)) && vacation.status !== 'CANCELLED' && (
                       <button className="btn btn-sm btn-outline-danger" onClick={() => onCancel(vacation.id)} title="Cancel">
                         <FaCalendarTimes />
                       </button>
