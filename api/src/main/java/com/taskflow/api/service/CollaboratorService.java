@@ -2,6 +2,7 @@ package com.taskflow.api.service;
 
 import com.taskflow.api.domain.collaborator.*;
 import com.taskflow.api.domain.enums.Role;
+import com.taskflow.api.domain.user.User;
 import com.taskflow.api.mapper.CollaboratorMapper;
 import com.taskflow.api.respository.CollaboratorRepository;
 
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneOffset;
@@ -21,10 +23,11 @@ public class CollaboratorService {
 
     private final CollaboratorRepository collaboratorRepository;
     private final UserService userService;
+    private final AccessScopeService accessScopeService;
     private final CollaboratorMapper mapper;
 
 
-    public CollaboratorCreationResponse createCollaborator(CollaboratorCreationRequest request) {
+    public CollaboratorDetails createCollaborator(CollaboratorCreationRequest request) {
         var user = userService.createUser(request.username(), request.email(), request.password(), request.role());
         var manager = getAssociateManager(request);
 
@@ -37,29 +40,29 @@ public class CollaboratorService {
 
         var saved = collaboratorRepository.save(collaborator);
 
-        return mapper.toCreationResponse(saved);
+        return mapper.toDetails(saved);
 
     }
 
-    public CollaboratorDetails getCollaboratorById(long id) {
-        var collaborator =  collaboratorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Collaborator not found"));
-
-        return mapper.toDetails(collaborator);
-    }
-
-    public Page<CollaboratorDetails> getAllCollaborators(CollaboratorFilter filter, int page, int size) {
+    public Page<CollaboratorDetails> getCollaborators(CollaboratorFilter filter, User currentUser, int page, int size) {
         var pageable = PageRequest.of(page, size);
 
+        if (currentUser.getRole() == Role.COLLABORATOR) {
+            throw new AccessDeniedException("You do not have permission to list collaborators.");
+        }
+
+        var accessScope = accessScopeService.resolve(currentUser);
+
         Page<Collaborator> collaborators = collaboratorRepository.findAllWithFilters(
+                filter.collaboratorId(),
                 filter.name(),
                 filter.username(),
                 filter.email(),
                 filter.department(),
-                filter.managerId(),
+                accessScope.managerId(),
                 filter.createdAtStart() != null ? filter.createdAtStart().atStartOfDay(ZoneOffset.UTC).toInstant() : null,
                 filter.createdAtEnd() != null ? filter.createdAtEnd().atTime(23, 59, 59).atZone(ZoneOffset.UTC).toInstant() : null,
-                filter.userRole().name(),
+                filter.userRole(),
                 filter.active(),
                 pageable
         );
