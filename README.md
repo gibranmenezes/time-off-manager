@@ -69,7 +69,8 @@ graph TD
 - Vacation requests have the following statuses:
   - `PENDING`: Awaiting approval.
   - `APPROVED`: Approved by a manager or admin.
-  - `REJECTED`: Rejected by a manager or admin.
+  - `DENIED`: Denied by a manager or admin.
+  - `CANCELLED`: Cancelled by collaborator, manager or admin.
 
 ## 🛠️ Tech Stack
 
