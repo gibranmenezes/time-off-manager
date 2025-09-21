@@ -1,6 +1,7 @@
 package com.taskflow.api.respository;
 
 import com.taskflow.api.domain.collaborator.Collaborator;
+import com.taskflow.api.domain.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,17 +20,19 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
     select c
     from Collaborator c
     join c.user u
-    where (:name is null or lower(c.name) like lower(concat('%', :name, '%')))
+    where (:collaboratorId is null or c.id = :collaboratorId)
+      and(:name is null or lower(c.name) like lower(concat('%', :name, '%')))
       and (:username is null or lower(u.username) like lower(concat('%', :username, '%')))
       and (:email is null or lower(u.email) like lower(concat('%', :email, '%')))
       and (:department is null or lower(c.department) like lower(concat('%', :department, '%')))
       and (:managerId is null or c.manager.id = :managerId)
       and (:createdFrom is null or c.createdAt >= :createdFrom)
       and (:createdTo is null or c.createdAt <= :createdTo)
-      and (:userRole is null or u.role = upper(:userRole) )
+      and (:userRole is null or u.role = :userRole)
       and (:active is null or c.active = :active)
     """)
     Page<Collaborator> findAllWithFilters(
+            @Param("collaboratorId") Long collaboratorId,
             @Param("name") String name,
             @Param("username") String username,
             @Param("email") String email,
@@ -37,7 +40,7 @@ public interface CollaboratorRepository extends JpaRepository<Collaborator, Long
             @Param("managerId") Long managerId,
             @Param("createdFrom") Instant createdFrom,
             @Param("createdTo") Instant createdTo,
-            @Param("userRole") String userRole,
+            @Param("userRole") Role userRole,
             @Param("active") Boolean active,
             Pageable pageable
     );

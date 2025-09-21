@@ -12,6 +12,8 @@ import java.time.LocalDate;
 
 public interface VacationRepository extends JpaRepository<Vacation, Long> {
 
+
+
     @Query("""
         SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END
         FROM Vacation r
@@ -30,13 +32,18 @@ public interface VacationRepository extends JpaRepository<Vacation, Long> {
         from Vacation v
         where (:managerId is null or v.collaborator.manager.id = :managerId)
           and (:collaboratorId is null or v.collaborator.id = :collaboratorId)
+          and (:vacationId is null or v.id = :vacationId)
+          and (:collaboratorName is null or lower(v.collaborator.name) like lower(concat('%', :collaboratorName, '%')))
           and (:status is null or v.vacationStatus = :status)
           and (:fromDate is null or v.endDate >= :fromDate)
           and (:toDate is null or v.startDate <= :toDate)
+          and (:status is null or v.vacationStatus = :status)
         """)
     Page<Vacation> findAllByScopeAndFilters(
             @Param("managerId") Long managerId,
             @Param("collaboratorId") Long collaboratorId,
+            @Param("vacationId") Long vacationId,
+            @Param("collaboratorName") String collaboratorName,
             @Param("status") VacationStatus status,
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate,
