@@ -9,11 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -123,6 +126,22 @@ public class CustomExceptionHandler {
 
         return AppResponse.internalServerError("Internal server error", "INTERNAL_ERROR", "An unexpected error occurred",
                         getTraceId())
+                .getResponseEntity();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<AppResponse<Object>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        String traceId = getTraceId();
+
+        List<AppErrorResponse> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> AppErrorResponse.builder()
+                        .code("INVALID_FIELD")
+                        .description(String.format("Field '%s': %s", error.getField(), error.getDefaultMessage()))
+                        .traceId(traceId)
+                        .build())
+                .collect(Collectors.toList());
+
+        return AppResponse.invalid("Validation failed", HttpStatus.BAD_REQUEST, errors)
                 .getResponseEntity();
     }
 
