@@ -3,6 +3,7 @@ package com.taskflow.api.service;
 import com.taskflow.api.domain.enums.VacationStatus;
 import com.taskflow.api.domain.user.User;
 import com.taskflow.api.domain.vacation.Vacation;
+import com.taskflow.api.domain.vacation.VacationFilter;
 import com.taskflow.api.domain.vacation.VacationRequest;
 import com.taskflow.api.domain.vacation.VacationResponse;
 import com.taskflow.api.mapper.VacationMapper;
@@ -67,7 +68,7 @@ public class VacationService {
     }
 
     @Transactional
-    public void approveOrRejectVacationRequest(Long requestId, String response, User currentUser) {
+    public void approveOrRejectVacationRequest(Long requestId, VacationStatus response, User currentUser) {
         var vacationRequest = vacationRepository.findById(requestId)
                 .orElseThrow(() -> new EntityNotFoundException("Vacation request not found"));
 
@@ -85,7 +86,7 @@ public class VacationService {
     }
 
     @Transactional
-    public void cancelVacation(Long vacationId, User currentUser) {
+    public VacationResponse cancelVacation(Long vacationId, User currentUser) {
         var vacation = vacationRepository.findById(vacationId)
                 .orElseThrow(() -> new EntityNotFoundException("Vacation not found"));
 
@@ -98,7 +99,11 @@ public class VacationService {
                 "You don't have permission to cancel this vacation request"
         );
 
-        vacationRepository.delete(vacation);
+        vacation.cancelVacation();
+
+        var saved =  vacationRepository.save(vacation);
+
+        return mapper.toResponse(saved);
     }
 
     @Transactional
@@ -119,23 +124,8 @@ public class VacationService {
         vacation.changeVacationPeriod(startDate, endDate);
        vacationRepository.save(vacation);
     }
-    
-    public VacationResponse getVacationById(Long vacationId, User currentUser) {
-        var vacation = vacationRepository.findById(vacationId)
-                .orElseThrow(() -> new EntityNotFoundException("Vacation not found"));
-        
-        authorizationService.checkAccess(
-                currentUser, 
-                vacation, 
-                policyFactory.getViewPolicies(),
-                "You don't have permission to view this vacation request"
-        );
-        
-        return mapper.toResponse(vacation);
-    }
 
-    public Page<VacationResponse> listVacations(User currentUser, VacationStatus status,
-                                                LocalDate fromDate, LocalDate toDate,
+    public Page<VacationResponse> listVacations(User currentUser, VacationFilter filter,
                                                 int page,int size) {
 
         var accessScope = accessScopeService.resolve(currentUser);
@@ -145,9 +135,11 @@ public class VacationService {
         Page<Vacation> vacations = vacationRepository.findAllByScopeAndFilters(
                 accessScope.managerId(),
                 accessScope.collaboratorId(),
-                status,
-                fromDate,
-                toDate,
+                filter.vacationId(),
+                filter.collaboratorName(),
+                filter.status(),
+                filter.fromDate(),
+                filter.toDate(),
                 pageable
         );
         
