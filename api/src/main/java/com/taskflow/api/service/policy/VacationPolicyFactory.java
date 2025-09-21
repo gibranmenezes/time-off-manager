@@ -17,7 +17,7 @@ public class VacationPolicyFactory {
     private final ManagerVacationPolicy managerPolicy;
     private final CollaboratorVacationPolicy collaboratorPolicy;
     private final ManagerApprovalPolicy managerApprovalPolicy;
-    private final CollaboratorRequestPolicy collaboratorRequestPolicy;
+    private final VacationCreationPolicy vacationCreationPolicy;
     
  
     public List<AuthorizationPolicy<Vacation>> getViewPolicies() {
@@ -36,6 +36,6 @@ public class VacationPolicyFactory {
     
   
     public List<AuthorizationPolicy<Collaborator>> getRequestPolicies() {
-        return List.of(collaboratorRequestPolicy);
+        return List.of(vacationCreationPolicy);
     }
 }
