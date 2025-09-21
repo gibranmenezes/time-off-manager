@@ -26,8 +26,9 @@ public class AuthorizationService {
     public TokenResponse login(LoginRequest request) {
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(request.username(), request.password());
         Authentication auth = authenticationManager.authenticate(usernamePassword);
-        String token = tokenProvider.generateToken((User) auth.getPrincipal());
-        return new TokenResponse(token);
+        User user = (User) auth.getPrincipal();
+        String token = tokenProvider.generateToken(user);
+        return new TokenResponse(token, user.getRole());
     }
 
     public <T> void checkAccess(User user, T resource, List<AuthorizationPolicy<T>> policies, String errorMessage) {
