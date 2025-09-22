@@ -96,7 +96,7 @@ graph TD
 1. Clone the repository:
    ```bash
    git clone https://github.com/gibranmenezes/time-off-manager.git
-   cd time-off-manager
+   cd time-off-manager/Docker
    ```
 
 2. Start the system:
@@ -113,7 +113,23 @@ graph TD
    - **Frontend**: Open your browser and navigate to: `http://localhost:3000`
    - **API**: Swagger UI available at: `http://localhost:8080/swagger-ui.html`
 
-5. Stop containers:
+5. To sign in the application:
+   
+| Username  | Role          | Password |
+|-----------|---------------|----------|
+| admin     | ADMIN         | 123456   |
+| manager1  | MANAGER       | 123456   |
+| manager2  | MANAGER       | 123456   |
+| collab1   | COLLABORATOR  | 123456   |
+| collab2   | COLLABORATOR  | 123456   |
+| collab3   | COLLABORATOR  | 123456   |
+| collab4   | COLLABORATOR  | 123456   |
+| collab5   | COLLABORATOR  | 123456   |
+| collab6   | COLLABORATOR  | 123456   |
+| collab7   | COLLABORATOR  | 123456   |
+   
+
+6. Stop containers:
    ```bash
    docker-compose down
    ```
